@@ -1,0 +1,19 @@
+
+all:
+  children:
+    k8s_vms:
+      hosts:
+        192.168.21.105:
+          ansible_connection: ssh
+          ansible_user      : ubuntu
+        192.168.21.106:
+          ansible_connection: ssh
+          ansible_user      : ubuntu
+        192.168.21.107:
+          ansible_connection: ssh
+          ansible_user      : ubuntu
+    k8s_storages:
+      hosts:
+        192.168.21.108:
+          ansible_connection: ssh
+          ansible_user      : ubuntu

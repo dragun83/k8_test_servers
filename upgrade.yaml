@@ -1,0 +1,18 @@
+- hosts : all
+  become     : true
+  become_user: root
+  tasks:
+    - name: Update APT cache and repo
+      apt : update_cache=yes force_apt_get=yes cache_valid_time=3600
+
+    - name: Upgrade all packages
+      apt : upgrade=dist force_apt_get=yes
+
+    - name: Reboot after upgrade
+      reboot:
+        msg              : "Reboot by ANSIBLE, bitch!"
+        connect_timeout  : 5
+        reboot_timeout   : 300
+        pre_reboot_delay : 0
+        post_reboot_delay: 30
+        test_command     : uptime 

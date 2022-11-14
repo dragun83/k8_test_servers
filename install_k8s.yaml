@@ -1,0 +1,43 @@
+- name : install k8s for cluster
+  hosts: all
+  become: yes
+  tasks:
+   - name: Disable SWAP
+     shell:
+       cmd: |
+         swapoff -a
+     args:
+       executable: /bin/bash
+   - name: Remove Swap from fstab
+     mount:
+       name: swap
+       fstype: swap
+       state: absent
+
+   - name: Disable UFW
+     ansible.builtin.systemd:
+        name: ufw.service
+        state: stopped
+        enabled: no
+
+   - name: Add k8s repo key
+     ansible.builtin.apt_key:
+       url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+       state: present
+
+   - name: Add k8s repo
+     apt_repository:
+       repo:  "deb http://apt.kubernetes.io/ kubernetes-xenial main"
+       state: present
+
+   - name: Update repo and install some K8s packets
+     apt:
+       update_cache: yes
+       pkg:
+       - kubelet
+       - kubeadm
+       - kubectl
+
+
+
+  

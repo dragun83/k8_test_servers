@@ -1,0 +1,13 @@
+- name: "Inastall MC"
+  hosts: all
+  become: yes
+
+  tasks:
+  - name: update apt
+    apt: update_cache=yes
+
+  - name: Install MC
+    apt:
+      pkg:
+      -  mc
+  

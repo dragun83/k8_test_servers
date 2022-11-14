@@ -1,0 +1,35 @@
+- hosts : k8s_storages
+  become     : true
+  become_user: root
+  tasks:
+    - name: "Update APT cache and repo then upgrade all packages"
+      apt :
+        update_cache: yes 
+        force_apt_get: yes
+        cache_valid_time: 3600
+        name: "*"
+        state: latest
+    - name: "Get nfs"
+      apt:
+        name: "nfs-kernel-server"
+        state: present
+    - name: "Setup sharefolder"
+      ansible.builtin.file:
+        path: /nfs_share
+        state: directory
+        mode: '0777'
+        owner: nobody
+        group: nogroup
+    - name : "Update export config file"
+      ansible.builtin.blockinfile:
+         path: /etc/exports
+         block: |
+           /nfs_share  192.168.21.0/24(rw,sync,no_subtree_check)
+    - name: "Resrtart NFS server"
+      ansible.builtin.systemd:
+        daemon_reload: yes
+        name: nfs-kernel-server
+        state: started
+    - name: "Exposing NFS"
+      command: exportfs -rav
+

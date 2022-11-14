@@ -1,0 +1,9 @@
+- name: add user @ubuntu@ to group docker
+  hosts: all
+  become: yes
+  tasks:
+  - name: Add user to gorup
+    user:
+      name: ubuntu
+      group: docker
+      append: yes
